@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:mutumbu/provider/AudioProvider.dart';
 import 'package:mutumbu/utils/colors.dart';
 import 'package:mutumbu/views/pages/AudioPlayerPage.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
 
@@ -55,6 +56,28 @@ class _AudiosListPageState extends State<AudiosListPage> {
                           audioProvider.allSongs[index].artist.toString(),
                           style: TextStyle(
                               color: grey
+                          ),
+                        ),
+                        leading: QueryArtworkWidget(
+                          id: audioProvider.allSongs[index].id,
+                          type: ArtworkType.AUDIO,
+                          artwork: audioProvider.allSongs[index].artwork,
+                          deviceSDK: 30,
+                          nullArtworkWidget: Container(
+                            height: 50.0,
+                            width: 50.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25.0),
+                              color: grey
+                            ),
+                            child: Center(
+                              child: Text(
+                                audioProvider.allSongs[index].title[0],
+                                style: TextStyle(
+                                  color: amber
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                         trailing: index == audioProvider.currentIndex ? Icon(Icons.music_note_rounded, color: amber,) : null,

@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:mutumbu/provider/AudioProvider.dart';
 import 'package:mutumbu/utils/colors.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
 
@@ -33,35 +36,73 @@ class _AlbumsListPageState extends State<AlbumsListPage> {
                 child: Text("Une erreur est survenue"),
               );
             }
-            return ListView.builder(
+            return GridView.builder(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200,
+                  childAspectRatio: 2 / 2.5,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20
+                ),
                 itemCount: audioProvider.allAlbums.length,
                 itemBuilder: (_, index){
-                  return ListTile(
-                    onTap: (){},
-                    leading: Container(
-                      height: 20.0,
-                      width: 20.0,
-                      child: Image.file(
-                        File(audioProvider.allAlbums[index].artwork.toString()),
-                        height: 20.0,
-                        width: 20.0,
-                      ),
+                  return Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    decoration: BoxDecoration(
+                      color: grey,
+                      borderRadius: BorderRadius.circular(5.0)
                     ),
-                    title: Text(
-                      audioProvider.allAlbums[index].albumName,
-                      style: TextStyle(
-                          color: white
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Text(
-                      audioProvider.allAlbums[index].artist,
-                      style: TextStyle(
-                          color: grey
-                      ),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 10.0,),
+                        QueryArtworkWidget(
+                          id: audioProvider.allAlbums[index].id,
+                          type: ArtworkType.ALBUM,
+                          artwork: audioProvider.allAlbums[index].artwork,
+                          deviceSDK: 30,
+                          artworkHeight: MediaQuery.of(context).size.width*0.3,
+                          artworkWidth: MediaQuery.of(context).size.width*0.3,
+                          artworkBorder: BorderRadius.circular(180),
+                          nullArtworkWidget: Container(
+                            height: MediaQuery.of(context).size.width*0.3,
+                            width: MediaQuery.of(context).size.width*0.3,
+                            decoration: BoxDecoration(
+                              color: black,
+                              borderRadius: BorderRadius.circular(180.0)
+                            ),
+                            child: Center(
+                              child: Text(
+                                audioProvider.allAlbums[index].albumName[0].toUpperCase(),
+                                style: TextStyle(
+                                  color: amber,
+                                  fontSize: 24
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10.0,),
+                        Text(
+                          audioProvider.allAlbums[index].albumName,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: amber
+                          ),
+                        ),
+                        SizedBox(height: 5.0,),
+                        Text(
+                          audioProvider.allAlbums[index].artist.toLowerCase(),
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: white
+                          ),
+                        ),
+                        SizedBox(height: 5.0,),
+                        Text("songs :" +audioProvider.allAlbums[index].numOfSongs),
+                      ],
                     ),
                   );
-                }
+                },
             );
           }
       ),
