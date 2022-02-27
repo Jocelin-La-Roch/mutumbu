@@ -67,13 +67,16 @@ class AudioProvider with ChangeNotifier{
   }
   pause(){
     player.pause();
+    notifyListeners();
   }
   continuePlay() async{
     if(firstPlay){
       await player.setFilePath(allSongs[currentIndex].filePath);
       player.play();
+      notifyListeners();
     }else{
       player.play();
+      notifyListeners();
     }
   }
 
