@@ -1,8 +1,10 @@
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 
 
 class PlaylistsListPage extends StatefulWidget {
-  const PlaylistsListPage({Key? key}) : super(key: key);
+  const PlaylistsListPage({Key key}) : super(key: key);
 
   @override
   _PlaylistsListPageState createState() => _PlaylistsListPageState();

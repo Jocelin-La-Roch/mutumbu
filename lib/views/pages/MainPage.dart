@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:mutumbu/utils/colors.dart';
@@ -8,7 +10,7 @@ import 'package:mutumbu/views/pages/PlaylistsListPage.dart';
 
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({Key key}) : super(key: key);
 
   @override
   _MainPageState createState() => _MainPageState();

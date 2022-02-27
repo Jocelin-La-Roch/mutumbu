@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:mutumbu/provider/AudioProvider.dart';
 import 'package:mutumbu/utils/colors.dart';
@@ -5,7 +7,7 @@ import 'package:provider/provider.dart';
 
 
 class AudioPlayerPage extends StatefulWidget {
-  const AudioPlayerPage({Key? key}) : super(key: key);
+  const AudioPlayerPage({Key key}) : super(key: key);
 
   @override
   _AudioPlayerPageState createState() => _AudioPlayerPageState();
@@ -35,7 +37,7 @@ class _AudioPlayerPageState extends State<AudioPlayerPage> {
               activeColor: amber,
               inactiveColor: grey,
               min: 0.0,
-              max: audioProvider.player.duration == null ? 4.0 : audioProvider.player.duration!.inSeconds.toDouble(),
+              max: audioProvider.player.duration == null ? 4.0 : audioProvider.player.duration.inSeconds.toDouble(),
             ),
           ),
           Row(

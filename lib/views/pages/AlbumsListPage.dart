@@ -1,7 +1,11 @@
+// @dart=2.9
+
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:hive/hive.dart';
 import 'package:mutumbu/provider/AudioProvider.dart';
 import 'package:mutumbu/utils/colors.dart';
@@ -10,13 +14,14 @@ import 'package:provider/provider.dart';
 
 
 class AlbumsListPage extends StatefulWidget {
-  const AlbumsListPage({Key? key}) : super(key: key);
+  const AlbumsListPage({Key key}) : super(key: key);
 
   @override
   _AlbumsListPageState createState() => _AlbumsListPageState();
 }
 
 class _AlbumsListPageState extends State<AlbumsListPage> {
+  final FlutterAudioQuery audioQuery = FlutterAudioQuery();
   @override
   Widget build(BuildContext context) {
     AudioProvider audioProvider = Provider.of<AudioProvider>(context);
@@ -54,7 +59,7 @@ class _AlbumsListPageState extends State<AlbumsListPage> {
                     child: Column(
                       children: [
                         SizedBox(height: 10.0,),
-                        QueryArtworkWidget(
+                        /*QueryArtworkWidget(
                           id: audioProvider.allAlbums[index].id,
                           type: ArtworkType.ALBUM,
                           artwork: audioProvider.allAlbums[index].artwork,
@@ -79,10 +84,68 @@ class _AlbumsListPageState extends State<AlbumsListPage> {
                               ),
                             ),
                           ),
+                        ),*/
+                        if (audioProvider.allAlbums[index].albumArt == null) FutureBuilder<Uint8List>(
+                          future: audioQuery.getArtwork(
+                              type: ResourceType.ALBUM,
+                              id: audioProvider.allAlbums[index].id,
+                              size: Size(100, 100)
+                          ),
+                          builder: (_, snapshot){
+                            if (snapshot.data == null){
+                              return Container(
+                                height: MediaQuery.of(context).size.width*0.3,
+                                width: MediaQuery.of(context).size.width*0.3,
+                                decoration: BoxDecoration(
+                                    color: grey,
+                                    borderRadius: BorderRadius.circular(180)
+                                ),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    //backgroundColor: amber,
+                                    color: amber,
+                                  ),
+                                ),
+                              );
+                            }
+                            if (snapshot.data.isEmpty){
+                              return Container(
+                                height: MediaQuery.of(context).size.width*0.3,
+                                width: MediaQuery.of(context).size.width*0.3,
+                                decoration: BoxDecoration(
+                                    color: black,
+                                    borderRadius: BorderRadius.circular(180.0)
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    audioProvider.allAlbums[index].title[0].toUpperCase(),
+                                    style: TextStyle(
+                                        color: amber,
+                                        fontSize: 24
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                            return CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: MemoryImage(
+                                snapshot.data,
+                              ),
+                              radius: MediaQuery.of(context).size.width*0.15,
+                            );
+                          },
+                        ) else Container(
+                          height: MediaQuery.of(context).size.width*0.3,
+                          width: MediaQuery.of(context).size.width*0.3,
+                          decoration: BoxDecoration(
+                            color: grey,
+                            borderRadius: BorderRadius.circular(180)
+                          ),
                         ),
                         SizedBox(height: 10.0,),
                         Text(
-                          audioProvider.allAlbums[index].albumName,
+                          audioProvider.allAlbums[index].title,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 16.0,
@@ -98,7 +161,7 @@ class _AlbumsListPageState extends State<AlbumsListPage> {
                           ),
                         ),
                         SizedBox(height: 5.0,),
-                        Text("songs :" +audioProvider.allAlbums[index].numOfSongs),
+                        Text("songs :" +audioProvider.allAlbums[index].numberOfSongs),
                       ],
                     ),
                   );

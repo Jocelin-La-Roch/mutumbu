@@ -1,20 +1,27 @@
+// @dart=2.9
+
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_audio_query/flutter_audio_query.dart';
 import 'package:mutumbu/provider/AudioProvider.dart';
 import 'package:mutumbu/utils/colors.dart';
 import 'package:mutumbu/views/pages/AudioPlayerPage.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 
 
 class AudiosListPage extends StatefulWidget {
-  const AudiosListPage({Key? key}) : super(key: key);
+  const AudiosListPage({Key key}) : super(key: key);
 
   @override
   _AudiosListPageState createState() => _AudiosListPageState();
 }
 
 class _AudiosListPageState extends State<AudiosListPage> {
+
+  final FlutterAudioQuery audioQuery = FlutterAudioQuery();
+
   @override
   Widget build(BuildContext context) {
     AudioProvider audioProvider = Provider.of<AudioProvider>(context);
@@ -58,28 +65,40 @@ class _AudiosListPageState extends State<AudiosListPage> {
                               color: grey
                           ),
                         ),
-                        leading: QueryArtworkWidget(
-                          id: audioProvider.allSongs[index].id,
-                          type: ArtworkType.AUDIO,
-                          artwork: audioProvider.allSongs[index].artwork,
-                          deviceSDK: 30,
-                          nullArtworkWidget: Container(
-                            height: 50.0,
-                            width: 50.0,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25.0),
-                              color: grey
-                            ),
-                            child: Center(
-                              child: Text(
-                                audioProvider.allSongs[index].title[0],
-                                style: TextStyle(
-                                  color: amber
+                        leading: audioProvider.allSongs[index].albumArtwork == null ? FutureBuilder<Uint8List>(
+                            future: audioQuery.getArtwork(
+                                type: ResourceType.SONG,
+                                id: audioProvider.allSongs[index].id,
+                                size: Size(100, 100)),
+                            builder: (_, snapshot) {
+                              if (snapshot.data == null)
+                                return CircleAvatar(
+                                  backgroundColor: black,
+                                  child: CircularProgressIndicator(
+                                    //backgroundColor: amber,
+                                    color: amber,
+                                  ),
+                                );
+
+                              if (snapshot.data.isEmpty)
+                                return Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    color: grey,
+                                    borderRadius: BorderRadius.circular(25.0)
+                                  ),
+                                );
+
+                              return CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                                backgroundImage: MemoryImage(
+                                  snapshot.data,
                                 ),
-                              ),
-                            ),
-                          ),
-                        ),
+                                radius: 25.0,
+                              );
+                            })
+                            : null,
                         trailing: index == audioProvider.currentIndex ? Icon(Icons.music_note_rounded, color: amber,) : null,
                       );
                     }
