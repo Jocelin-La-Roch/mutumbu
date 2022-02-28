@@ -81,31 +81,44 @@ class AudioProvider with ChangeNotifier{
   }
 
   Future getAllSongs() async{
-    ServiceResponse<List<SongInfo>> _serviceResponse;
-    _serviceResponse = await AudioServices().getAllSongs();
-    if(_serviceResponse.permissionGranted == false){
-      return "permission";
-    }else if(_serviceResponse.error == true && _serviceResponse.permissionGranted == true){
-      return "error";
+    if(allSongs.length == 0){
+      ServiceResponse<List<SongInfo>> _serviceResponse;
+      _serviceResponse = await AudioServices().getAllSongs();
+      if(_serviceResponse.permissionGranted == false){
+        return "permission";
+      }else if(_serviceResponse.error == true && _serviceResponse.permissionGranted == true){
+        return "error";
+      }else{
+        allSongs = _serviceResponse.data;
+        notifyListeners();
+        return "ok";
+      }
     }else{
-      allSongs = _serviceResponse.data;
-      notifyListeners();
       return "ok";
     }
   }
 
   Future getAllAlbums() async{
-    ServiceResponse<List<AlbumInfo>> _serviceResponse;
-    _serviceResponse = await AudioServices().getAllAlbums();
-    if(_serviceResponse.permissionGranted == false){
-      return "permission";
-    }else if(_serviceResponse.error == true && _serviceResponse.permissionGranted == true){
-      return "error";
+    if(allAlbums.length == 0){
+      ServiceResponse<List<AlbumInfo>> _serviceResponse;
+      _serviceResponse = await AudioServices().getAllAlbums();
+      if(_serviceResponse.permissionGranted == false){
+        return "permission";
+      }else if(_serviceResponse.error == true && _serviceResponse.permissionGranted == true){
+        return "error";
+      }else{
+        allAlbums = _serviceResponse.data;
+        notifyListeners();
+        print(allAlbums[0]);
+        return "ok";
+      }
     }else{
-      allAlbums = _serviceResponse.data;
-      notifyListeners();
-      print(allAlbums[0]);
       return "ok";
     }
+  }
+
+  listenToDuration(double value){
+    player.seek(Duration(seconds: value.toInt()));
+    notifyListeners();
   }
 }

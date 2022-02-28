@@ -32,7 +32,7 @@ class _AudioPlayerPageState extends State<AudioPlayerPage> {
             child: Slider(
               value: audioProvider.player.position.inSeconds.toDouble(),
               onChanged: (value){
-                audioProvider.player.seek(Duration(seconds: value.toInt()));
+                audioProvider.listenToDuration(value);
               },
               activeColor: amber,
               inactiveColor: grey,

@@ -22,6 +22,7 @@ class _AudiosListPageState extends State<AudiosListPage> {
 
   final FlutterAudioQuery audioQuery = FlutterAudioQuery();
 
+
   @override
   Widget build(BuildContext context) {
     AudioProvider audioProvider = Provider.of<AudioProvider>(context);
@@ -60,7 +61,7 @@ class _AudiosListPageState extends State<AudiosListPage> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         subtitle: Text(
-                          audioProvider.allSongs[index].artist.toString(),
+                          audioProvider.allSongs[index].artist,
                           style: TextStyle(
                               color: grey
                           ),
@@ -164,7 +165,7 @@ class _AudiosListPageState extends State<AudiosListPage> {
                             ),
                           ),
                           Text(
-                            audioProvider.allSongs.isNotEmpty ? audioProvider.allSongs[audioProvider.currentIndex].artist.toString() : "Recherche...",
+                            audioProvider.allSongs.isNotEmpty ? audioProvider.allSongs[audioProvider.currentIndex].artist : "Recherche...",
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: white,
