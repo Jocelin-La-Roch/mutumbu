@@ -36,9 +36,23 @@ class AudioServices {
     return ServiceResponse<List<AlbumInfo>>(data: albums, errorMessage: "albums list", permissionGranted: true, error: false);
   }
 
+  getAllArtists() async{
+    // final OnAudioQuery _audioQuery = OnAudioQuery();
+    // List<AlbumInfo> albums = await _audioQuery;
+    final FlutterAudioQuery audioQuery = FlutterAudioQuery();
+    List<ArtistInfo> artists = await audioQuery.getArtists();
+    return ServiceResponse<List<ArtistInfo>>(data: artists, errorMessage: "artists list", permissionGranted: true, error: false);
+  }
+
   getAlbumSongs(String albumId) async{
     final FlutterAudioQuery audioQuery = FlutterAudioQuery();
     List<SongInfo> songs = await audioQuery.getSongsFromAlbum(albumId: albumId);
-    return ServiceResponse<List<SongInfo>>(data: songs, errorMessage: "albums list", permissionGranted: true, error: false);
+    return ServiceResponse<List<SongInfo>>(data: songs, errorMessage: "album songs list", permissionGranted: true, error: false);
+  }
+
+  getArtistSong(String artistId) async{
+    final FlutterAudioQuery audioQuery = FlutterAudioQuery();
+    List<SongInfo> songs = await audioQuery.getSongsFromArtist(artistId: artistId);
+    return ServiceResponse<List<SongInfo>>(data: songs, errorMessage: "artist songs list", permissionGranted: true, error: false);
   }
 }

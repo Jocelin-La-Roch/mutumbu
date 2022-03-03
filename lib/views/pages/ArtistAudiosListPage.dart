@@ -9,14 +9,15 @@ import 'package:mutumbu/utils/colors.dart';
 import 'package:mutumbu/views/pages/AudioPlayerPage.dart';
 import 'package:provider/provider.dart';
 
-class AlbumAudiosListPage extends StatefulWidget {
-  const AlbumAudiosListPage({Key key}) : super(key: key);
+
+class ArtistAudiosListPage extends StatefulWidget {
+  const ArtistAudiosListPage({Key key}) : super(key: key);
 
   @override
-  _AlbumAudiosListPageState createState() => _AlbumAudiosListPageState();
+  _ArtistAudiosListPageState createState() => _ArtistAudiosListPageState();
 }
 
-class _AlbumAudiosListPageState extends State<AlbumAudiosListPage> {
+class _ArtistAudiosListPageState extends State<ArtistAudiosListPage> {
 
   final FlutterAudioQuery audioQuery = FlutterAudioQuery();
 
@@ -29,9 +30,16 @@ class _AlbumAudiosListPageState extends State<AlbumAudiosListPage> {
         backgroundColor: black,
         elevation: 1,
         iconTheme: IconThemeData(color: amber),
+        centerTitle: true,
+        title: Text(
+          audioProvider.allArtists[audioProvider.currentArtistIndex].name,
+          style: TextStyle(
+            color: white,
+          ),
+        ),
       ),
       body: FutureBuilder(
-          future: audioProvider.getAlbumSongs(),
+          future: audioProvider.getArtistSong(),
           builder: (_, snapshot){
             if(!snapshot.hasData){
               return Center( child: CircularProgressIndicator(color: amber,));
@@ -45,27 +53,27 @@ class _AlbumAudiosListPageState extends State<AlbumAudiosListPage> {
               );
             }
             return ListView.builder(
-                itemCount: audioProvider.albumSongs.length,
+                itemCount: audioProvider.artistSongs.length,
                 itemBuilder: (_, index){
                   return ListTile(
                     onTap: (){
                       audioProvider.setCurrentIndex(index);
-                      audioProvider.setCurrentSong(audioProvider.albumSongs[index]);
-                      audioProvider.setListIndex(2);
-                      audioProvider.playSong(2);
+                      audioProvider.setCurrentSong(audioProvider.artistSongs[index]);
+                      audioProvider.setListIndex(3);
+                      audioProvider.playSong(3);
                       Navigator.push(context, new MaterialPageRoute(builder: (context) => AudioPlayerPage()));
                     },
                     title: Text(
-                      audioProvider.albumSongs[index].title,
+                      audioProvider.artistSongs[index].title,
                       style: TextStyle(
-                          color: (index == audioProvider.currentIndex && audioProvider.listIndex == 2) ? amber : white
+                          color: (index == audioProvider.currentIndex && audioProvider.listIndex == 3) ? amber : white
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    leading: audioProvider.albumSongs[index].albumArtwork == null ? FutureBuilder<Uint8List>(
+                    leading: audioProvider.artistSongs[index].albumArtwork == null ? FutureBuilder<Uint8List>(
                         future: audioQuery.getArtwork(
                             type: ResourceType.SONG,
-                            id: audioProvider.albumSongs[index].id,
+                            id: audioProvider.artistSongs[index].id,
                             size: Size(100, 100)),
                         builder: (_, snapshot) {
                           if (snapshot.data == null)
@@ -96,7 +104,7 @@ class _AlbumAudiosListPageState extends State<AlbumAudiosListPage> {
                           );
                         })
                         : null,
-                    trailing: (index == audioProvider.currentIndex && audioProvider.listIndex == 2) ? Icon(Icons.music_note_rounded, color: amber,) : null,
+                    trailing: (index == audioProvider.currentIndex && audioProvider.listIndex == 3) ? Icon(Icons.music_note_rounded, color: amber,) : null,
                   );
                 }
             );
