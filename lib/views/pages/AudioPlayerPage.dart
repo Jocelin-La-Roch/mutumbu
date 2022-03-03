@@ -30,7 +30,7 @@ class _AudioPlayerPageState extends State<AudioPlayerPage> {
           Padding(
             padding: EdgeInsets.all(10.0),
             child: Slider(
-              value: audioProvider.player.position.inSeconds.toDouble(),
+              value: audioProvider.position,
               onChanged: (value){
                 audioProvider.listenToDuration(value);
               },

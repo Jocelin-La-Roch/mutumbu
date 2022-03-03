@@ -35,4 +35,10 @@ class AudioServices {
     List<AlbumInfo> albums = await audioQuery.getAlbums();
     return ServiceResponse<List<AlbumInfo>>(data: albums, errorMessage: "albums list", permissionGranted: true, error: false);
   }
+
+  getAlbumSongs(String albumId) async{
+    final FlutterAudioQuery audioQuery = FlutterAudioQuery();
+    List<SongInfo> songs = await audioQuery.getSongsFromAlbum(albumId: albumId);
+    return ServiceResponse<List<SongInfo>>(data: songs, errorMessage: "albums list", permissionGranted: true, error: false);
+  }
 }

@@ -22,7 +22,6 @@ class _AudiosListPageState extends State<AudiosListPage> {
 
   final FlutterAudioQuery audioQuery = FlutterAudioQuery();
 
-
   @override
   Widget build(BuildContext context) {
     AudioProvider audioProvider = Provider.of<AudioProvider>(context);
@@ -50,13 +49,15 @@ class _AudiosListPageState extends State<AudiosListPage> {
                       return ListTile(
                         onTap: (){
                           audioProvider.setCurrentIndex(index);
-                          audioProvider.playSong();
-                          print(audioProvider.allSongs[index]);
+                          audioProvider.setCurrentSong(audioProvider.allSongs[index]);
+                          audioProvider.setListIndex(1);
+                          audioProvider.playSong(1);
+                          Navigator.push(context, new MaterialPageRoute(builder: (context) => AudioPlayerPage()));
                         },
                         title: Text(
                           audioProvider.allSongs[index].title,
                           style: TextStyle(
-                              color: index ==audioProvider.currentIndex ? amber : white
+                              color: (index == audioProvider.currentIndex && audioProvider.listIndex == 1) ? amber : white
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -100,7 +101,7 @@ class _AudiosListPageState extends State<AudiosListPage> {
                               );
                             })
                             : null,
-                        trailing: index == audioProvider.currentIndex ? Icon(Icons.music_note_rounded, color: amber,) : null,
+                        trailing: (index == audioProvider.currentIndex && audioProvider.listIndex == 1) ? Icon(Icons.music_note_rounded, color: amber,) : null,
                       );
                     }
                 );
@@ -157,7 +158,7 @@ class _AudiosListPageState extends State<AudiosListPage> {
                         children: [
                           SizedBox(height: 14),
                           Text(
-                            audioProvider.allSongs.isNotEmpty ? audioProvider.allSongs[audioProvider.currentIndex].title : "Recherche...",
+                            audioProvider.allSongs.isNotEmpty ? audioProvider.currentSong.title : "Recherche...",
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: amber,
@@ -165,7 +166,7 @@ class _AudiosListPageState extends State<AudiosListPage> {
                             ),
                           ),
                           Text(
-                            audioProvider.allSongs.isNotEmpty ? audioProvider.allSongs[audioProvider.currentIndex].artist : "Recherche...",
+                            audioProvider.allSongs.isNotEmpty ? audioProvider.currentSong.artist : "Recherche...",
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: white,
